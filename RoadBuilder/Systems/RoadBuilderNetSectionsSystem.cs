@@ -472,9 +472,13 @@ namespace RoadBuilder.Systems
 				}
 
 				var matchPieceVertices = sidewalk.GetComponent<MatchPieceVertices>();
-				//matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2;
-				//matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2) + 0.4f;
-				matchPieceVertices.m_Offsets[2] = sidewalk.m_Width / 2;
+				if (matchPieceVertices != null && matchPieceVertices.m_Offsets != null && matchPieceVertices.m_Offsets.Length > 2)
+				{
+					// Keep both side boundaries tied to the actual sidewalk width so transitions between width families line up.
+					matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2f;
+					matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2f) + 0.4f;
+					matchPieceVertices.m_Offsets[2] = sidewalk.m_Width / 2f;
+				}
 
 				foreach (var item in sidewalk.GetComponent<NetPieceObjects>().m_PieceObjects)
 				{
@@ -876,7 +880,7 @@ namespace RoadBuilder.Systems
 		{
 			foreach (var width in new float[] { 4, 3, 2.5f, 2, 1.5f, 1 })
 			{
-				var originalSize = width > 3 ? "4.5" : "3.5";
+				var originalSize = width > 3.5f ? "4.5" : "3.5";
 				var sidewalk = (NetSections["Sidewalk " + originalSize].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab)!;
 
 				foreach (var item in sidewalk.m_Pieces)
