@@ -225,12 +225,7 @@ namespace RoadBuilder.Systems
 
 			if (prefab.Has<Bridge>())
 			{
-				prefab = roadBuilderSystem.ResolveBasePrefab(prefab);
-
-				if (prefab.Has<Bridge>())
-				{
-					return false;
-				}
+				return false;
 			}
 
 			if (applyAction.WasPerformedThisFrame())

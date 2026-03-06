@@ -26,7 +26,6 @@ namespace RoadBuilder.Systems
 	public partial class RoadBuilderSystem : GameSystemBase
 	{
 		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
-		private readonly Dictionary<NetGeometryPrefab, NetGeometryPrefab> _bridgeBasePrefabCache = new();
 
 #nullable disable
 		private PrefabSystem prefabSystem;
@@ -156,48 +155,6 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public NetGeometryPrefab ResolveBasePrefab(NetGeometryPrefab prefab)
-		{
-			if (!prefab.Has<Bridge>())
-			{
-				return prefab;
-			}
-
-			if (_bridgeBasePrefabCache.TryGetValue(prefab, out var cached))
-			{
-				return cached;
-			}
-
-			if (prefab.m_AggregateType == null)
-			{
-				_bridgeBasePrefabCache[prefab] = prefab;
-				return prefab;
-			}
-
-			var entities = SystemAPI.QueryBuilder().WithAll<RoadData>().Build().ToEntityArray(Allocator.Temp);
-
-			try
-			{
-				for (var i = 0; i < entities.Length; i++)
-				{
-					if (prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(entities[i], out var candidate)
-						&& !candidate.Has<Bridge>()
-						&& candidate.m_AggregateType == prefab.m_AggregateType)
-					{
-						_bridgeBasePrefabCache[prefab] = candidate;
-						return candidate;
-					}
-				}
-			}
-			finally
-			{
-				entities.Dispose();
-			}
-
-			_bridgeBasePrefabCache[prefab] = prefab;
-			return prefab;
-		}
-
 		public INetworkConfig? GetOrGenerateConfiguration(Entity entity)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
@@ -209,8 +166,6 @@ namespace RoadBuilder.Systems
 			{
 				return null;
 			}
-
-			roadPrefab = ResolveBasePrefab(roadPrefab);
 
 			if (roadPrefab is INetworkBuilderPrefab networkBuilderPrefab)
 			{
@@ -236,8 +191,6 @@ namespace RoadBuilder.Systems
 			{
 				return null;
 			}
-
-			roadPrefab = ResolveBasePrefab(roadPrefab);
 
 			if (roadGenerationDataSystem.RoadGenerationData is null)
 			{
