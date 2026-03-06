@@ -223,6 +223,16 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
+			if (prefab.Has<Bridge>())
+			{
+				prefab = roadBuilderSystem.ResolveBasePrefab(prefab);
+
+				if (prefab.Has<Bridge>())
+				{
+					return false;
+				}
+			}
+
 			if (applyAction.WasPerformedThisFrame())
 			{
 				if (prefab is INetworkBuilderPrefab)
