@@ -59,8 +59,12 @@ namespace RoadBuilder.Systems
 
 			new RoadNameUtil(this, roadBuilderUISystem, netSectionsSystem);
 
-			// Delay getting the toolbar ui system assets for the next frame
-			GameManager.instance.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
+			// Delay getting the toolbar UI system assets until the field is available.
+			GameManager.instance.RegisterUpdater(() =>
+			{
+				toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
+				return toolbarUISystemLastSelectedAssets is null;
+			});
 		}
 
 		protected override void OnUpdate()

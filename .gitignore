@@ -362,5 +362,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-KEYS.cs
+# Local-only API endpoint definition for online features.
+# Keep this file out of PRs so upstream endpoint values are never overwritten.
+RoadBuilder/Utilities/Online/KEYS.cs
 ilpp.pid

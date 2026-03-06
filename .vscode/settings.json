@@ -1,0 +1,12 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "dotnet build": true,
+        "git rev-list": true,
+        "ForEach-Object": true,
+        "url\\": true,
+        "discover\\": true,
+        "upload\\": true,
+        "server\\": true,
+        "host\\": true
+    }
+}

@@ -152,13 +152,18 @@ namespace RoadBuilder.Systems
 			}
 			else
 			{
-				GameManager.instance.RegisterUpdater(() => GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+				GameManager.instance.RegisterUpdater(() =>
 				{
-					if (msg == 0)
+					GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 					{
-						FixEdges(invalidEntities);
-					}
-				}));
+						if (msg == 0)
+						{
+							FixEdges(invalidEntities);
+						}
+					});
+
+					return false;
+				});
 			}
 		}
 

@@ -77,7 +77,11 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderRoadManagementUISystem>(SystemUpdatePhase.UIUpdate);
 
-			GameManager.instance.RegisterUpdater(() => Task.Run(PdxModsUtil.Start));
+			GameManager.instance.RegisterUpdater(() =>
+			{
+				Task.Run(PdxModsUtil.Start);
+				return false;
+			});
 		}
 
 		public void OnDispose()

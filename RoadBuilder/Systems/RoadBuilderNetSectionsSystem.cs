@@ -919,6 +919,47 @@ namespace RoadBuilder.Systems
 					m_RequireNone = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
 				});
 
+				if (width < 3.5f)
+				{
+					var transitionAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition };
+
+					pieces.Add(new NetPieceInfo
+					{
+						m_Piece = sidewalk.m_Pieces[0].m_Piece,
+						m_Offset = new(-offset, 0f, 0f),
+						m_RequireAll = new[] { NetPieceRequirements.Inverted },
+						m_RequireAny = transitionAny,
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+					});
+
+					pieces.Add(new NetPieceInfo
+					{
+						m_Piece = sidewalk.m_Pieces[1].m_Piece,
+						m_Offset = new(-offset, 0f, 0f),
+						m_RequireAll = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.LevelCrossing },
+						m_RequireAny = transitionAny,
+						m_RequireNone = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+					});
+
+					pieces.Add(new NetPieceInfo
+					{
+						m_Piece = sidewalk.m_Pieces[0].m_Piece,
+						m_Offset = new(offset, 0f, 0f),
+						m_RequireAll = new NetPieceRequirements[0],
+						m_RequireAny = transitionAny,
+						m_RequireNone = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.LevelCrossing, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+					});
+
+					pieces.Add(new NetPieceInfo
+					{
+						m_Piece = sidewalk.m_Pieces[1].m_Piece,
+						m_Offset = new(offset, 0f, 0f),
+						m_RequireAll = new[] { NetPieceRequirements.LevelCrossing },
+						m_RequireAny = transitionAny,
+						m_RequireNone = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+					});
+				}
+
 				sidewalk.m_Pieces = pieces.ToArray();
 
 				prefabSystem.AddPrefab(sidewalk);
